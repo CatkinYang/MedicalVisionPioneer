@@ -1,0 +1,127 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+    <link rel="stylesheet" type="text/css" href="~/Content/assets/css/bootstrap-clearmin.min.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/assets/css/roboto.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/assets/css/material-design.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/assets/css/small-n-flat.css">
+    <link rel="stylesheet" type="text/css" href="~/Content/assets/css/font-awesome.min.css">
+    <title>PatientLayout`</title>
+</head>
+<body class="cm-no-transition cm-1-navbar">
+    <div id="cm-menu">
+        <nav class="cm-navbar cm-navbar-primary" style="display:flex; align-items: center;">
+            <div class="cm-flex" style="flex-grow: 1; display:flex; justify-content: center;">
+                <a href="/Patient/Index" style="color:white">Medical Vision Pioneer</a>
+            </div>
+            <div class="btn btn-primary md-menu-white" data-toggle="cm-menu"></div>
+        </nav>
+        <div id="cm-menu-content">
+            <div id="cm-menu-items-wrapper">
+                <div id="cm-menu-scroller">
+                    <ul class="cm-menu-items">
+                        <li class="active"><a href="/Patient/Appointment" class="sf-building">Appointment</a></li>
+                        <li class="cm-submenu active">
+                            <a class="sf-window-layout"> Case <span class="caret"></span></a>
+                            <ul>
+                                <li class="active"><a href=""><i class="fa fa-fw fa-list-alt"></i>Current</a></li>
+                                <li class="active"><a href=""><i class="fa fa-fw fa-list-alt"></i>History</a></li>
+                            </ul>
+                        </li>
+                        <li class="active"><a href="/Patient/Map" class="sf-map">Map</a></li>
+                        <li class="active"><a href="/Patient/Profile_info" class="sf-profile">Profile</a></li>
+                        <li class="active"><a href="/Patient/Settings" class="sf-wrench">Settings</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    <header id="cm-header">
+        <nav class="cm-navbar cm-navbar-primary">
+            <div class="btn btn-primary md-menu-white hidden-md hidden-lg" data-toggle="cm-menu"></div>
+            <div class="cm-flex">
+                <h1>@ViewBag.Title</h1>
+                <form id="cm-search" action="index.html" method="get">
+                    <input type="search" name="q" autocomplete="off" placeholder="Search...">
+                </form>
+            </div>
+            <div class="pull-right">
+                <div id="cm-search-btn" class="btn btn-primary md-search-white" data-toggle="cm-search"></div>
+            </div>
+            <div class="dropdown pull-right">
+                <button class="btn btn-primary md-notifications-white" data-toggle="dropdown">
+                    <span class="label label-danger"></span>
+                </button>
+                <div class="popover cm-popover bottom">
+                    <div class="arrow"></div>
+                    <div class="popover-content">
+                        <div class="list-group">
+                            <a href="#" class="list-group-item">
+                                <h4 class="list-group-item-heading text-overflow">
+                                    <i class="fa fa-fw fa-envelope"></i> Eamil.
+                                </h4>
+                                <p class="list-group-item-text text-overflow">
+                                    Received a email from A
+                                </p>
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <h4 class="list-group-item-heading text-overflow">
+                                    <i class="fa fa-fw fa-envelope"></i> Eamil.
+                                </h4>
+                                <p class="list-group-item-text text-overflow">
+                                    Received a email from B
+                                </p>
+                            </a>
+                            <a href="#" class="list-group-item">
+                                <h4 class="list-group-item-heading">
+                                    <i class="fa fa-fw fa-warning"></i> Ok
+                                </h4>
+                                <p class="list-group-item-text">Best check yo self, you're not looking too good.</p>
+                            </a>
+                        </div>
+                        <div style="padding:10px">
+                            <a class="btn btn-success btn-block" href="#">Show me more...</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="dropdown pull-right">
+                <button class="btn btn-primary md-account-circle-white" data-toggle="dropdown"></button>
+                <ul class="dropdown-menu">
+                    <li class="disabled text-center">
+                        <a style="cursor:default;"><strong>John Smith</strong></a>
+                    </li>
+                    <li class="divider"></li>
+                    <li>
+                        <a href="#"><i class="fa fa-fw fa-user"></i> Profile</a>
+                    </li>
+                    <li>
+                        <a href="#"><i class="fa fa-fw fa-cog"></i> Settings</a>
+                    </li>
+                    <li>
+                        <a href="login.html"><i class="fa fa-fw fa-sign-out"></i> Sign out</a>
+                    </li>
+                </ul>
+            </div>
+        </nav>
+    </header>
+
+    <div id="global">
+        <div>
+            @RenderBody()
+        </div>
+    </div>
+
+
+    <script src="~/Content/assets/js/lib/jquery.min.js"></script>
+    <script src="~/Content/assets/js/jquery.mousewheel.min.js"></script>
+    <script src="~/Content/assets/js/jquery.cookie.min.js"></script>
+    <script src="~/Content/assets/js/fastclick.min.js"></script>
+    <script src="~/Content/assets/js/bootstrap.min.js"></script>
+    <script src="~/Content/assets/js/clearmin.min.js"></script>
+    <script src="~/Content/assets/js/demo/home.js"></script>
+</body>
+</html>

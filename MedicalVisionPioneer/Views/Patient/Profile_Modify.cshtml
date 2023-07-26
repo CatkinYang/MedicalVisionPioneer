@@ -1,0 +1,74 @@
+﻿@model MedicalVisionPioneer.Models.PatientInfo
+
+@{
+    ViewBag.Title = "Profile_info";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row cm-fix-height">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>Update the Profile</h3>
+                    <form action="/Patient/Profile_Modify" method="post" onsubmit="return checkForm()">
+                        <table class="table table-bordered" style="margin-top:10px;">
+                            <tr>
+                                <th style="text-align:right;">ID：</th>
+                                <td><input type="text" name="patientid" value="@Model.AccountID" class="form-control" placeholder="Your id can not be exchanged" /></td>
+                                <th style="text-align:right;">PhoneNumber：</th>
+                                <td><input type="text" name="patientPhone" value="@Model.patientPhone" class="form-control" placeholder="please enter your phonenumber" /></td>
+                            </tr>
+                            <tr>
+                                <th style="text-align:right;">Name：</th>
+                                <td><input type="text" name="patientname" value="@Model.patientName" class="form-control" placeholder="please enter your name" /></td>
+                                <th style="text-align:right;">NickName：</th>
+                                <td><input type="text" name="patientNickname" value="@Model.patientNickname" class="form-control" placeholder="please enter your nickname" /></td>
+                            </tr>
+                            <tr>
+                                <th style="text-align:right;">Age：</th>
+                                <td><input type="text" name="patientAge" value="@Model.patientAge" class="form-control" placeholder="please enter your Age" /></td>
+                                <th style="text-align:right;">Gender：</th>
+                                <td><input type="text" name="patientSex" value="@Model.patientSex" class="form-control" placeholder="please enter your Gender: male of female" /></td>
+                            </tr>
+                            <tr>
+                                <th style="text-align:right;">Birthday：</th>
+                                <td><input type="text" name="patientBirthday" value="@Model.patientBirthday" class="form-control" placeholder="please enter the Birthday " /></td>
+                                <th style="text-align:right;">Email：</th>
+                                <td><input type="text" name="patientEmail" value="@Model.patientEmail" class="form-control" placeholder="Your id can not be exchanged" /></td>
+                            </tr>
+
+                            <tr>
+                                <th style="text-align:right;">Height:</th>
+                                <td><input type="text" name="patientHeight" value="@Model.patientHeight" class="form-control" placeholder="please enter your Height" /></td>
+                                <th style="text-align:right;">Weight：</th>
+                                <td><input type="text" name="patientWeight" value="@Model.patientWeight" class="form-control" placeholder="please enter your Weight" /></td>
+                            </tr>
+                            <tr>
+                                <th colspan="4" style="text-align:center;">
+                                    <input type="submit" class="btn btn-default" value="update" />
+                                    <input type="button" class="btn btn-default" onclick="javascript: window.history.back();" value="Back" />
+                                </th>
+                            </tr>
+                        </table>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function checkForm() {
+        //        if ($('[name="patientid"]').val().length < 1) {
+        //          alert("Please enter the id!");
+        //        $('[name="patientid"]').focus();
+        //      return false;
+        //}
+        //        if ($('[name="patientEmail"]').val().length < 1) {
+        //            alert("Please enter the phonenumber!");
+        //            $('[name="patientEmail"]').focus();
+        return true;
+        //    }
+    }
+
+</script>

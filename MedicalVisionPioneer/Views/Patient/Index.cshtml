@@ -1,0 +1,76 @@
+﻿@model PagedList.IPagedList<MedicalVisionPioneer.Models.HWinfo>
+@using PagedList.Mvc
+@using Newtonsoft.Json;
+
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+@{
+    int id = (Model.PageNumber - 1) * Model.PageSize + 1;
+}
+<div class="container-fluid cm-container-white">
+    <h2 style="margin-top:0;">Welcome to Mediacl Vision Pioneer!</h2>
+    <p>
+        We are a company focusing on innovative medical imaging technology.
+        Our mission is to provide comprehensive solutions for the medical industry
+        through advanced image processing and analysis technology to improve the effect of diagnosis, treatment and patient care.
+    </p>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Weight change record sheet</div>
+                <div class="panel-body">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Weight(Kg)</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var record in Model)
+                            {
+                                <tr>
+                                    <td>@id</td>
+                                    <td>@record.patientWeight</td>
+                                    <td>@record.infoCreaterdate.ToString("yyyy/MM/dd: HH:mm")</td>
+                                </tr>
+                                id++;
+                            }
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Weight Chart</div>
+                <div class="panel-body">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">C3 Splines</div>
+                        <div class="panel-body">
+                            <div id="d1-c4" style="height:320px"></div>
+                        </div>
+                    </div>
+                </div>
+                <div class="panel-footer">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default time-span-btn" data-time-span="day">Day</button>
+                        <button type="button" class="btn btn-default time-span-btn" data-time-span="month">Month</button>
+                        <button type="button" class="btn btn-default time-span-btn" data-time-span="year">Year</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

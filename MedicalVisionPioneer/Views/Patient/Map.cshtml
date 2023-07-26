@@ -1,0 +1,163 @@
+﻿@{
+    ViewBag.Title = "Map";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+
+<link href="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.css" rel="stylesheet">
+<script src="https://api.mapbox.com/mapbox-gl-js/v2.15.0/mapbox-gl.js"></script>
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.js"></script>
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-directions/v4.1.1/mapbox-gl-directions.css" type="text/css">
+<link rel="stylesheet" href="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.css" type="text/css">
+<script src="https://api.mapbox.com/mapbox-gl-js/plugins/mapbox-gl-geocoder/v5.0.0/mapbox-gl-geocoder.min.js"></script>
+
+<style>
+    body {
+        margin: 0;
+        padding: 0;
+    }
+
+    #map {
+        position: inherit;
+        top: 0;
+        bottom: 0;
+        height: 600px;
+        width: 100%;
+    }
+</style>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md-12">
+            <h1>Map</h1>
+            <div id="map"></div>
+        </div>
+        <div class="col-md-12">
+            <button id="showHospitalsButton">Show Hospitals</button>
+        </div>
+    </div>
+    <div class="row mt-4">
+        <div class="col-md-12">
+            <h2>Nearby Hospitals</h2>
+            <table id="hospitalsTable" class="table table-striped">
+                <thead>
+                    <tr>
+                        <th>Number</th>
+                        <th>Name</th>
+                        <th>Location</th>
+                    </tr>
+                </thead>
+                <tbody></tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    mapboxgl.accessToken = 'pk.eyJ1IjoiY2F0a2lubGliIiwiYSI6ImNsanJ6dW5hNDBraHgzZnBhbHAwcXJsMW0ifQ.rPNIcQzKD3yUa8nWpQVNNA';
+    const map = new mapboxgl.Map({
+        container: 'map',
+        style: 'mapbox://styles/mapbox/streets-v12',
+        center: [120.745522, 31.26988],
+        zoom: 18
+    });
+
+    const geolocateControl = new mapboxgl.GeolocateControl({
+        positionOptions: {
+            enableHighAccuracy: true
+        },
+        trackUserLocation: true,
+        showUserHeading: true
+    });
+
+    map.addControl(geolocateControl,'top-left');
+
+    geolocateControl.on('geolocate', function (event) {
+        const { coords } = event;
+        const accuracy = coords.accuracy;
+
+        const zoomLevel = getZoomLevelFromAccuracy(accuracy);
+
+        map.flyTo({
+            center: [coords.longitude, coords.latitude],
+            zoom: zoomLevel
+        });
+    });
+
+    function getZoomLevelFromAccuracy(accuracy) {
+        // Adjust these values according to your preference
+        const maxAccuracy = 2000; // Maximum accuracy radius in meters
+        const maxZoom = 16; // Maximum zoom level
+
+        // Calculate the zoom level based on accuracy
+        const normalizedAccuracy = Math.min(accuracy, maxAccuracy);
+        const zoom = Math.floor(maxZoom - Math.log2(normalizedAccuracy / maxAccuracy) * 2);
+
+        return Math.max(zoom, 1); // Ensure the minimum zoom level is 1
+    }
+
+    map.on('load', function () {
+        geolocateControl.trigger();
+    });
+
+    map.addControl(new MapboxGeocoder({
+        accessToken: mapboxgl.accessToken,
+        mapboxgl: mapboxgl
+    }));
+
+    const showHospitalsButton = document.getElementById('showHospitalsButton');
+
+    showHospitalsButton.addEventListener('click', function () {
+        const lngLat = [map.getCenter().lng, map.getCenter().lat];
+        searchNearbyHospitals(lngLat);
+    });
+
+    function searchNearbyHospitals(lngLat) {
+        const radius = 500;
+        const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/hospital.json?proximity=${lngLat[0]},${lngLat[1]}&radius=${radius}&types=poi&access_token=${mapboxgl.accessToken}`;
+
+        fetch(url)
+            .then(response => response.json())
+            .then(data => {
+                const hospitals = data.features;
+                const hospitalsTableBody = document.querySelector('#hospitalsTable tbody');
+                hospitalsTableBody.innerHTML = '';
+
+                hospitals.forEach((hospital, index) => {
+                    const coordinates = hospital.geometry.coordinates;
+                    const name = hospital.place_name;
+
+                    const row = document.createElement('tr');
+
+                    const numberCell = document.createElement('td');
+                    numberCell.textContent = index + 1;
+                    const nameCell = document.createElement('td');
+                    nameCell.textContent = name;
+                    const locationCell = document.createElement('td');
+                    locationCell.textContent = `${coordinates[0]}, ${coordinates[1]}`;
+
+                    row.appendChild(numberCell);
+                    row.appendChild(nameCell);
+                    row.appendChild(locationCell);
+
+                    hospitalsTableBody.appendChild(row);
+
+                    const marker = new mapboxgl.Marker()
+                        .setLngLat(coordinates)
+                        .setPopup(new mapboxgl.Popup().setText(name))
+                        .addTo(map);
+                });
+
+            })
+            .catch(error => {
+                console.error('错误:', error);
+            });
+    }
+    function createHospitalMarker(coordinates, name) {
+        const marker = new mapboxgl.Marker()
+            .setLngLat(coordinates)
+            .setPopup(new mapboxgl.Popup().setText(name))
+            .addTo(map);
+    }
+
+</script>

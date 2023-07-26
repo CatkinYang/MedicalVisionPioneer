@@ -1,0 +1,57 @@
+﻿@model MedicalVisionPioneer.Models.PatientInfo
+
+@{
+    ViewBag.Title = "Profile_info";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="row cm-fix-height">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>My infomation</h3>
+                    <table class="table table-bordered" style="margin-top:10px;">
+                        <tr>
+                            <th style="text-align:right;">ID: </th>
+                            <td>@Model.AccountID</td>
+                            <th style="text-align:right;">PhoneNumber: </th>
+                            <td>@Model.patientPhone</td>
+                        </tr>
+                        <tr>
+                            <th style="text-align:right;">Name: </th>
+                            <td>@Model.patientName</td>
+                            <th style="text-align:right;">NickName: </th>
+                            <td>@Model.patientNickname</td>
+                        </tr>
+                        <tr>
+                            <th style="text-align:right;">Age: </th>
+                            <td>@Model.patientAge</td>
+                            <th style="text-align:right;">Gender: </th>
+                            <td>@Model.patientSex</td>
+                        </tr>
+                        <tr>
+                            <th style="text-align:right;">Birthday: </th>
+                            <td>@Model.patientBirthday</td>
+                            <th style="text-align:right;">Email: </th>
+                            <td>@Model.patientEmail</td>
+                        </tr>
+                        <tr>
+                            <th style="text-align:right;">Height: </th>
+                            <td>@Model.patientHeight</td>
+                            <th style="text-align:right;">Weight: </th>
+                            <td>@Model.patientWeight</td>
+                        </tr>
+
+                        <tr>
+                            <th colspan="4" style="text-align:center;">
+                                <input type="button" class="btn btn-default" onclick="javascript: window.location.href = '/Patient/Profile_Modify';" value="Modify" />
+                                <input type="button" class="btn btn-default" onclick="javascript: window.history.back();" value="Back" />
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

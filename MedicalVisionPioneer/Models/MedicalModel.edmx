@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+  <!-- EF Runtime content -->
+  <edmx:Runtime>
+    <!-- SSDL content -->
+    <edmx:StorageModels>
+    <Schema Namespace="MedicalVisionPioneerModel.Store" Provider="System.Data.SqlClient" ProviderManifestToken="2012" Alias="Self" xmlns:store="http://schemas.microsoft.com/ado/2007/12/edm/EntityStoreSchemaGenerator" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm/ssdl">
+        <EntityType Name="Account">
+          <Key>
+            <PropertyRef Name="patientEmail" />
+          </Key>
+          <Property Name="patientEmail" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="patientPwd" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="patientId" Type="int" Nullable="false" />
+        </EntityType>
+        <EntityType Name="HWinfo">
+          <Key>
+            <PropertyRef Name="HWrecordID" />
+          </Key>
+          <Property Name="HWrecordID" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="patientId" Type="int" Nullable="false" />
+          <Property Name="patientHeight" Type="int" />
+          <Property Name="patientWeight" Type="int" />
+          <Property Name="infoCreaterdate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="PatientInfo">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="AccountID" Type="int" Nullable="false" />
+          <Property Name="patientName" Type="nvarchar" MaxLength="50" />
+          <Property Name="patientAge" Type="tinyint" />
+          <Property Name="patientSex" Type="nvarchar" MaxLength="10" />
+          <Property Name="patientBirthday" Type="date" />
+          <Property Name="patientEmail" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="patientPhone" Type="nvarchar" MaxLength="50" />
+          <Property Name="patientHeight" Type="int" />
+          <Property Name="patientWeight" Type="int" />
+          <Property Name="patientNickname" Type="nvarchar" MaxLength="50" />
+        </EntityType>
+        <EntityContainer Name="MedicalVisionPioneerModelStoreContainer">
+          <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="HWinfo" EntityType="Self.HWinfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="PatientInfo" EntityType="Self.PatientInfo" Schema="dbo" store:Type="Tables" />
+        </EntityContainer>
+      </Schema></edmx:StorageModels>
+    <!-- CSDL content -->
+    <edmx:ConceptualModels>
+      <Schema Namespace="MedicalVisionPioneerModel" Alias="Self" annotation:UseStrongSpatialTypes="false" xmlns:annotation="http://schemas.microsoft.com/ado/2009/02/edm/annotation" xmlns:customannotation="http://schemas.microsoft.com/ado/2013/11/edm/customannotation" xmlns="http://schemas.microsoft.com/ado/2009/11/edm">
+        <EntityType Name="PatientInfo">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="patientName" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="patientAge" Type="Byte" />
+          <Property Name="patientSex" Type="String" MaxLength="10" FixedLength="false" Unicode="true" />
+          <Property Name="patientBirthday" Type="DateTime" Precision="0" />
+          <Property Name="patientEmail" Type="String" MaxLength="50" FixedLength="false" Unicode="true" Nullable="false" />
+          <Property Name="patientPhone" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="patientHeight" Type="Int32" />
+          <Property Name="patientWeight" Type="Int32" />
+          <Property Name="AccountID" Type="Int32" Nullable="false" />
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="patientNickname" Type="String" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityContainer Name="MedicalVisionPioneerEntities" annotation:LazyLoadingEnabled="true">
+          <EntitySet Name="PatientInfo" EntityType="Self.PatientInfo" />
+          <EntitySet Name="Account" EntityType="MedicalVisionPioneerModel.Account" />
+          <EntitySet Name="HWinfo" EntityType="MedicalVisionPioneerModel.HWinfo" />
+        </EntityContainer>
+        <EntityType Name="Account">
+          <Key>
+            <PropertyRef Name="patientEmail" />
+          </Key>
+          <Property Name="patientEmail" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="patientPwd" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="patientId" Type="Int32" Nullable="false" />
+        </EntityType>
+        <EntityType Name="HWinfo">
+          <Key>
+            <PropertyRef Name="HWrecordID" />
+          </Key>
+          <Property Name="HWrecordID" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="patientId" Type="Int32" Nullable="false" />
+          <Property Name="patientHeight" Type="Int32" />
+          <Property Name="patientWeight" Type="Int32" />
+          <Property Name="infoCreaterdate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+      </Schema>
+    </edmx:ConceptualModels>
+    <!-- C-S mapping content -->
+    <edmx:Mappings>
+      <Mapping Space="C-S" xmlns="http://schemas.microsoft.com/ado/2009/11/mapping/cs">
+        <EntityContainerMapping StorageEntityContainer="MedicalVisionPioneerModelStoreContainer" CdmEntityContainer="MedicalVisionPioneerEntities">
+          <EntitySetMapping Name="PatientInfo">
+            <EntityTypeMapping TypeName="MedicalVisionPioneerModel.PatientInfo">
+              <MappingFragment StoreEntitySet="PatientInfo">
+                <ScalarProperty Name="patientNickname" ColumnName="patientNickname" />
+                <ScalarProperty Name="id" ColumnName="id" />
+                <ScalarProperty Name="AccountID" ColumnName="AccountID" />
+                <ScalarProperty Name="patientWeight" ColumnName="patientWeight" />
+                <ScalarProperty Name="patientHeight" ColumnName="patientHeight" />
+                <ScalarProperty Name="patientName" ColumnName="patientName" />
+                <ScalarProperty Name="patientAge" ColumnName="patientAge" />
+                <ScalarProperty Name="patientSex" ColumnName="patientSex" />
+                <ScalarProperty Name="patientBirthday" ColumnName="patientBirthday" />
+                <ScalarProperty Name="patientEmail" ColumnName="patientEmail" />
+                <ScalarProperty Name="patientPhone" ColumnName="patientPhone" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Account">
+            <EntityTypeMapping TypeName="MedicalVisionPioneerModel.Account">
+              <MappingFragment StoreEntitySet="Account">
+                <ScalarProperty Name="patientId" ColumnName="patientId" />
+                <ScalarProperty Name="patientPwd" ColumnName="patientPwd" />
+                <ScalarProperty Name="patientEmail" ColumnName="patientEmail" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="HWinfo">
+            <EntityTypeMapping TypeName="MedicalVisionPioneerModel.HWinfo">
+              <MappingFragment StoreEntitySet="HWinfo">
+                <ScalarProperty Name="infoCreaterdate" ColumnName="infoCreaterdate" />
+                <ScalarProperty Name="patientWeight" ColumnName="patientWeight" />
+                <ScalarProperty Name="patientHeight" ColumnName="patientHeight" />
+                <ScalarProperty Name="patientId" ColumnName="patientId" />
+                <ScalarProperty Name="HWrecordID" ColumnName="HWrecordID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+        </EntityContainerMapping>
+      </Mapping>
+    </edmx:Mappings>
+  </edmx:Runtime>
+  <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <Connection>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="MetadataArtifactProcessing" Value="EmbedInOutputAssembly" />
+      </DesignerInfoPropertySet>
+    </Connection>
+    <Options>
+      <DesignerInfoPropertySet>
+        <DesignerProperty Name="ValidateOnBuild" Value="true" />
+        <DesignerProperty Name="EnablePluralization" Value="false" />
+        <DesignerProperty Name="IncludeForeignKeysInModel" Value="true" />
+        <DesignerProperty Name="UseLegacyProvider" Value="false" />
+        <DesignerProperty Name="CodeGenerationStrategy" Value="None" />
+      </DesignerInfoPropertySet>
+    </Options>
+    <!-- Diagram content (shape and connector positions) -->
+    <Diagrams></Diagrams>
+  </Designer>
+</edmx:Edmx>

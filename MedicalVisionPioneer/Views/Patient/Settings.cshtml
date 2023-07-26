@@ -1,0 +1,36 @@
+﻿@model MedicalVisionPioneer.Models.PatientInfo
+
+@{
+    ViewBag.Title = "Settings";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="col-md-12">
+        <h1>Hello, @Model.patientName</h1>
+    </div>
+    <div class="col-md-12">
+        <button type="button" class="btn btn-primary" onclick="confirmLogout()">Logout</button>
+    </div>
+</div>
+<script>
+    function confirmLogout() {
+        if (confirm("Are you sure you want to logout?")) {
+            logout();
+        }
+    }
+
+    function logout() {
+        $.ajax({
+            url: '@Url.Action("Logout", "Patient")',
+            type: 'POST',
+            success: function () {
+                window.location.href = '@Url.Action("Login", "Patient")';
+            },
+            error: function () {
+                // 处理错误情况
+            }
+        });
+    }
+</script>
+
