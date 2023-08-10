@@ -7,7 +7,12 @@
       <Diagram DiagramId="e022e187adb341eba612c0841e07fdc6" Name="Diagram1">
         <EntityTypeShape EntityType="MedicalVisionPioneerModel.PatientInfo" Width="1.5" PointX="1.5" PointY="1" IsExpanded="true" />
         <EntityTypeShape EntityType="MedicalVisionPioneerModel.Account" Width="1.5" PointX="5.5" PointY="1" />
-        <EntityTypeShape EntityType="MedicalVisionPioneerModel.HWinfo" Width="1.5" PointX="7.625" PointY="3.5" />
+        <EntityTypeShape EntityType="MedicalVisionPioneerModel.HWinfo" Width="1.5" PointX="5.5" PointY="2.75" />
+        <EntityTypeShape EntityType="MedicalVisionPioneerModel.docAccount" Width="1.5" PointX="3.75" PointY="1" />
+        <EntityTypeShape EntityType="MedicalVisionPioneerModel.docInfo" Width="1.5" PointX="2.375" PointY="4.75" />
+        <EntityTypeShape EntityType="MedicalVisionPioneerModel.Appointment" Width="1.5" PointX="7.875" PointY="2.625" />
+        <EntityTypeShape EntityType="MedicalVisionPioneerModel.Comment" Width="1.5" PointX="6.5" PointY="5.125" />
+        <EntityTypeShape EntityType="MedicalVisionPioneerModel.openAppointment" Width="1.5" PointX="4.25" PointY="7.125" />
       </Diagram>
     </edmx:Diagrams>
   </edmx:Designer>

@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 using Newtonsoft.Json;
+using System.Net.Mail;
 
 namespace MedicalVisionPioneer.Controllers
 {
@@ -200,7 +201,7 @@ namespace MedicalVisionPioneer.Controllers
         }
 
 
-        //Regester
+        //Register
         public ActionResult Regester()
         {
             return View();
@@ -270,5 +271,104 @@ namespace MedicalVisionPioneer.Controllers
         }
 
 
+      /*  public ActionResult Appointment()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public String CreateAppointment()
+        {
+            var appointment = new Appointment
+            {
+                patientid= int.Parse(Request.Form["PatientID"]),
+                docid = int.Parse(Request.Form["DoctorID"]),
+                date = Request.Form["AppointmentDate"]
+            };
+
+            var vx = Request.Files["Attachment"].ContentLength;
+
+            // Store the attachment in local storage.
+            var Str1 = Request.Files[0].FileName.Split('.');
+            var FileType = Str1[Str1.Length - 1];
+            var FilePath =
+                Server.MapPath("~/Uploads/") +
+                string.Format(@"{0}", Guid.NewGuid()) +
+                "." + FileType;
+            Request.Files[0].SaveAs(FilePath);
+
+            if (ModelState.IsValid)
+            {
+                // Add the appointment into the database.
+                db.Appointment.Add(appointment);
+                db.SaveChanges();
+
+                // Send confirmation email.
+                var mail = new MailMessage();
+                mail.To.Add(new MailAddress(Request.Form["EmailAddress"]));
+                mail.From = new MailAddress("iamlin2001@outlook.com");
+
+                mail.Subject = "Appointment Conformation";
+                mail.Body =
+                    "You made an appointment:\n" +
+                    "Patient ID: " + Request.Form["PatientID"] + "\n" +
+                    "Doctor ID: " + Request.Form["DoctorID"] + "\n" +
+                    "Date: " + Request.Form["AppointmentDate"];
+                mail.IsBodyHtml = false;
+
+                var attachment = new System.Net.Mail.Attachment(FilePath);
+                mail.Attachments.Add(attachment);
+
+                var smtp = new SmtpClient();
+                smtp.Host = "smtp.office365.com";
+                smtp.Port = 587;
+                smtp.EnableSsl = true;
+                smtp.Credentials = new System.Net.NetworkCredential
+                    ("iamlin2001@outlook.com", "zml20010106");
+                smtp.Send(mail);
+                return "Success";
+            }
+
+            return "Database Unavailable.";
+        }*/
+        
+       
+        [HttpPost]
+        public ActionResult Comment(int rate, string comment, string currentTime)
+        {
+            string currentUserEmail = (string)Session["useremail"];
+            if (string.IsNullOrEmpty(currentUserEmail))
+            {
+                // 当前用户未登录，执行相应的处理逻辑（例如重定向到登录页面）
+                return RedirectToAction("Login", "Patient");
+            }
+
+            // 根据当前用户的邮箱获取对应的用户数据
+            PatientInfo existingInfo = db.PatientInfo.FirstOrDefault(p => p.patientEmail == currentUserEmail);
+            if (existingInfo == null)
+            {
+                // 用户数据不存在，执行适当的处理逻辑
+                // ...
+            }
+            Comment PatientComment = new Comment();
+            PatientComment.patientId= existingInfo.AccountID;
+            PatientComment.rate = rate;
+            PatientComment.comment = comment;
+            PatientComment.date = DateTime.Parse(currentTime);
+            db.Comment.Add(PatientComment);
+            db.SaveChanges();
+            return View();
+        }
+
+        [HttpGet]
+        public ActionResult Comment()
+        {
+            // 获取并计算平均评分
+            double averageRate = db.Comment.Average(c => c.rate);
+
+            ViewBag.AverageRate = averageRate.ToString("0.00");  // 将平均评分传递到视图
+
+            return View();
+        }
     }
 }

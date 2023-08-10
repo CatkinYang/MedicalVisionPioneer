@@ -13,6 +13,41 @@
           <Property Name="patientPwd" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="patientId" Type="int" Nullable="false" />
         </EntityType>
+        <EntityType Name="Appointment">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="docid" Type="int" Nullable="false" />
+          <Property Name="patientid" Type="int" Nullable="false" />
+          <Property Name="date" Type="nvarchar(max)" Nullable="false" />
+        </EntityType>
+        <EntityType Name="Comment">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="patientId" Type="int" Nullable="false" />
+          <Property Name="rate" Type="int" Nullable="false" />
+          <Property Name="comment" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="date" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="docAccount">
+          <Key>
+            <PropertyRef Name="docEmail" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="docEmail" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="docPwd" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
+        <EntityType Name="docInfo">
+          <Key>
+            <PropertyRef Name="docId" />
+          </Key>
+          <Property Name="docId" Type="int" Nullable="false" />
+          <Property Name="docName" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="docMajor" Type="nvarchar" MaxLength="50" Nullable="false" />
+        </EntityType>
         <EntityType Name="HWinfo">
           <Key>
             <PropertyRef Name="HWrecordID" />
@@ -22,6 +57,14 @@
           <Property Name="patientHeight" Type="int" />
           <Property Name="patientWeight" Type="int" />
           <Property Name="infoCreaterdate" Type="datetime" Nullable="false" />
+        </EntityType>
+        <EntityType Name="openAppointment">
+          <Key>
+            <PropertyRef Name="docId" />
+          </Key>
+          <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
+          <Property Name="docId" Type="int" Nullable="false" />
+          <Property Name="date" Type="datetime" Nullable="false" />
         </EntityType>
         <EntityType Name="PatientInfo">
           <Key>
@@ -41,7 +84,12 @@
         </EntityType>
         <EntityContainer Name="MedicalVisionPioneerModelStoreContainer">
           <EntitySet Name="Account" EntityType="Self.Account" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Appointment" EntityType="Self.Appointment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="Comment" EntityType="Self.Comment" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="docAccount" EntityType="Self.docAccount" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="docInfo" EntityType="Self.docInfo" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="HWinfo" EntityType="Self.HWinfo" Schema="dbo" store:Type="Tables" />
+          <EntitySet Name="openAppointment" EntityType="Self.openAppointment" Schema="dbo" store:Type="Tables" />
           <EntitySet Name="PatientInfo" EntityType="Self.PatientInfo" Schema="dbo" store:Type="Tables" />
         </EntityContainer>
       </Schema></edmx:StorageModels>
@@ -68,6 +116,11 @@
           <EntitySet Name="PatientInfo" EntityType="Self.PatientInfo" />
           <EntitySet Name="Account" EntityType="MedicalVisionPioneerModel.Account" />
           <EntitySet Name="HWinfo" EntityType="MedicalVisionPioneerModel.HWinfo" />
+          <EntitySet Name="docAccount" EntityType="MedicalVisionPioneerModel.docAccount" />
+          <EntitySet Name="docInfo" EntityType="MedicalVisionPioneerModel.docInfo" />
+          <EntitySet Name="Appointment" EntityType="MedicalVisionPioneerModel.Appointment" />
+          <EntitySet Name="Comment" EntityType="MedicalVisionPioneerModel.Comment" />
+          <EntitySet Name="openAppointment" EntityType="MedicalVisionPioneerModel.openAppointment" />
         </EntityContainer>
         <EntityType Name="Account">
           <Key>
@@ -86,6 +139,49 @@
           <Property Name="patientHeight" Type="Int32" />
           <Property Name="patientWeight" Type="Int32" />
           <Property Name="infoCreaterdate" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="docAccount">
+          <Key>
+            <PropertyRef Name="docEmail" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="docEmail" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="docPwd" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="docInfo">
+          <Key>
+            <PropertyRef Name="docId" />
+          </Key>
+          <Property Name="docId" Type="Int32" Nullable="false" />
+          <Property Name="docName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="docMajor" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Appointment">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="docid" Type="Int32" Nullable="false" />
+          <Property Name="patientid" Type="Int32" Nullable="false" />
+          <Property Name="date" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+        </EntityType>
+        <EntityType Name="Comment">
+          <Key>
+            <PropertyRef Name="id" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="patientId" Type="Int32" Nullable="false" />
+          <Property Name="rate" Type="Int32" Nullable="false" />
+          <Property Name="comment" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="3" />
+        </EntityType>
+        <EntityType Name="openAppointment">
+          <Key>
+            <PropertyRef Name="docId" />
+          </Key>
+          <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
+          <Property Name="docId" Type="Int32" Nullable="false" />
+          <Property Name="date" Type="DateTime" Nullable="false" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -127,6 +223,54 @@
                 <ScalarProperty Name="patientHeight" ColumnName="patientHeight" />
                 <ScalarProperty Name="patientId" ColumnName="patientId" />
                 <ScalarProperty Name="HWrecordID" ColumnName="HWrecordID" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="docAccount">
+            <EntityTypeMapping TypeName="MedicalVisionPioneerModel.docAccount">
+              <MappingFragment StoreEntitySet="docAccount">
+                <ScalarProperty Name="docPwd" ColumnName="docPwd" />
+                <ScalarProperty Name="docEmail" ColumnName="docEmail" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="docInfo">
+            <EntityTypeMapping TypeName="MedicalVisionPioneerModel.docInfo">
+              <MappingFragment StoreEntitySet="docInfo">
+                <ScalarProperty Name="docMajor" ColumnName="docMajor" />
+                <ScalarProperty Name="docName" ColumnName="docName" />
+                <ScalarProperty Name="docId" ColumnName="docId" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Appointment">
+            <EntityTypeMapping TypeName="MedicalVisionPioneerModel.Appointment">
+              <MappingFragment StoreEntitySet="Appointment">
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="patientid" ColumnName="patientid" />
+                <ScalarProperty Name="docid" ColumnName="docid" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="Comment">
+            <EntityTypeMapping TypeName="MedicalVisionPioneerModel.Comment">
+              <MappingFragment StoreEntitySet="Comment">
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="comment" ColumnName="comment" />
+                <ScalarProperty Name="rate" ColumnName="rate" />
+                <ScalarProperty Name="patientId" ColumnName="patientId" />
+                <ScalarProperty Name="id" ColumnName="id" />
+              </MappingFragment>
+            </EntityTypeMapping>
+          </EntitySetMapping>
+          <EntitySetMapping Name="openAppointment">
+            <EntityTypeMapping TypeName="MedicalVisionPioneerModel.openAppointment">
+              <MappingFragment StoreEntitySet="openAppointment">
+                <ScalarProperty Name="date" ColumnName="date" />
+                <ScalarProperty Name="docId" ColumnName="docId" />
+                <ScalarProperty Name="id" ColumnName="id" />
               </MappingFragment>
             </EntityTypeMapping>
           </EntitySetMapping>

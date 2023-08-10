@@ -1,0 +1,65 @@
+﻿
+@{
+    ViewBag.Title = "Appointment";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+@{
+    ViewBag.Title = "Appointment";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div id="calendar"></div>
+    </div>
+    <div id="confirmationDialog" style="display: none;">
+        <p>Open Appointment?</p>
+        <button id="confirmBtn">Yes</button>
+        <button id="cancelBtn">No</button>
+    </div>
+</div>
+
+<script>
+
+    document.addEventListener('DOMContentLoaded', function () {
+        var calendarEl = document.getElementById('calendar');
+        var calendar = new FullCalendar.Calendar(calendarEl, {
+            initialView: 'dayGridMonth',
+            selectable: true,
+
+            dateClick: function (info) {
+                var dateObj = new Date(info.start);
+                var year = dateObj.getFullYear();
+                var month = String(dateObj.getMonth() + 1).padStart(2, '0');
+                var day = String(dateObj.getDate()).padStart(2, '0');
+                var selectedDate = `${year}-${month}-${day}`;
+                document.getElementById('confirmationDialog').style.display = 'block';
+                document.getElementById('confirmBtn').addEventListener('click', function () {
+                    openAppointment(selectedDate);
+                    document.getElementById('confirmationDialog').style.display = 'none';
+                });
+                document.getElementById('cancelBtn').addEventListener('click', function () {
+                    document.getElementById('confirmationDialog').style.display = 'none';
+                });
+            },
+        });
+        calendar.render();
+        function openAppointment(selectedDate) {
+            $.ajax({
+            url: '@Url.Action("Appointment", "Doctor")', // 根据实际情况修改对应的控制器和动作方法
+                type: 'POST',
+                data: { date: selectedDate }, // 添加currentTime数据
+                success: function () {
+                    alert("Open Appointment successfully");
+                    location.reload(); // 刷新页面
+                },
+                error: function () {
+                    alert("Open Appointment failed");
+                // 处理保存失败或出错情况
+                }
+            });
+        }
+    });
+
+
+</script>

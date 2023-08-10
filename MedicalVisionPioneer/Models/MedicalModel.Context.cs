@@ -28,5 +28,10 @@ namespace MedicalVisionPioneer.Models
         public virtual DbSet<PatientInfo> PatientInfo { get; set; }
         public virtual DbSet<Account> Account { get; set; }
         public virtual DbSet<HWinfo> HWinfo { get; set; }
+        public virtual DbSet<docAccount> docAccount { get; set; }
+        public virtual DbSet<docInfo> docInfo { get; set; }
+        public virtual DbSet<Appointment> Appointment { get; set; }
+        public virtual DbSet<Comment> Comment { get; set; }
+        public virtual DbSet<openAppointment> openAppointment { get; set; }
     }
 }

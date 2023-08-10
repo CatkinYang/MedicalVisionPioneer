@@ -49,6 +49,15 @@
                     <div class="text-center">
                         @Html.PagedListPager(Model, page => Url.Action("Index", new { page }))
                     </div>
+                    <div class="dropdown">
+                        <button class="btn btn-primary dropdown-toggle" type="button" id="exportBtn" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            Export
+                        </button>
+                        <div class="dropdown-menu" aria-labelledby="exportBtn">
+                            <a class="dropdown-item" href="#" id="txtExport">Export as TXT</a>
+                            <a class="dropdown-item" href="#" id="htmlExport">Export as HTML</a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -56,12 +65,7 @@
             <div class="panel panel-default">
                 <div class="panel-heading">Weight Chart</div>
                 <div class="panel-body">
-                    <div class="panel panel-default">
-                        <div class="panel-heading">C3 Splines</div>
-                        <div class="panel-body">
-                            <div id="d1-c4" style="height:320px"></div>
-                        </div>
-                    </div>
+                    <canvas id="weightChart"></canvas>
                 </div>
                 <div class="panel-footer">
                     <div class="btn-group">
@@ -74,3 +78,136 @@
         </div>
     </div>
 </div>
+<script>
+
+    const timeSpanButtons = document.querySelectorAll('.time-span-btn');
+    const weightData = @Html.Raw(JsonConvert.SerializeObject(Model.Select(r => new { Date = r.infoCreaterdate.ToString("yyyy-MM-dd HH:mm"), Weight = r.patientWeight })));
+
+
+    let weightChart = null; // 保存当前图表的引用
+
+    function createWeightChart(labels, data) {
+        const ctx = document.getElementById('weightChart');
+
+        if (weightChart) {
+            weightChart.destroy(); // 销毁之前的图表
+        }
+
+        weightChart = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Weight',
+                    data: data,
+                    fill: false,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2
+                }]
+            },
+            options: {
+                responsive: true,
+                scales: {
+                    x: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Date'
+                        }
+                    },
+                    y: {
+                        display: true,
+                        title: {
+                            display: true,
+                            text: 'Weight (kg)'
+                        }
+                    }
+                }
+            }
+        });
+    }
+
+    let filteredData = weightData;
+    timeSpanButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            const timeSpan = button.getAttribute('data-time-span');
+
+   
+            const now = new Date();
+
+            switch (timeSpan) {
+                case 'day':
+                    filteredData = weightData.filter(item => {
+                        const itemDate = new Date(item.Date);
+                        return itemDate.getDate() === now.getDate();
+                    });
+                    break;
+                case 'month':
+                    filteredData = weightData.filter(item => {
+                        const itemDate = new Date(item.Date);
+                        return itemDate.getMonth() === now.getMonth();
+                    });
+                    break;
+                case 'year':
+                    filteredData = weightData.filter(item => {
+                        const itemDate = new Date(item.Date);
+                        return itemDate.getFullYear() === now.getFullYear();
+                    });
+                    break;
+            }
+
+            const dates = filteredData.map(item => item.Date);
+            const weights = filteredData.map(item => item.Weight);
+            createWeightChart(dates, weights);
+        });
+    });
+
+    document.getElementById('txtExport').addEventListener('click', function () {
+        const dataToExport = filteredData.map(item => `Date: ${item.Date}, Weight: ${item.Weight}`).join('\n');
+        downloadFile(dataToExport, 'weight_data.txt');
+    });
+
+    document.getElementById('htmlExport').addEventListener('click', function () {
+        const dataToExport = generateHTMLTable(filteredData);
+        downloadFile(dataToExport, 'weight_data.html');
+    });
+
+    function downloadFile(content, fileName) {
+        const downloadLink = document.createElement('a');
+        downloadLink.href = URL.createObjectURL(new Blob([content], { type: 'text/plain;charset=utf-8' }));
+        downloadLink.setAttribute('download', fileName);
+        downloadLink.style.display = 'none';
+        document.body.appendChild(downloadLink);
+        downloadLink.click();
+        document.body.removeChild(downloadLink);
+    }
+
+    function generateHTMLTable(data) {
+        let tableHtml = '<table>';
+
+        // 生成表头
+        tableHtml += '<thead><tr>';
+        tableHtml += '<th>ID</th>';
+        tableHtml += '<th>Weight(Kg)</th>';
+        tableHtml += '<th>Date</th>';
+        tableHtml += '</tr></thead>';
+
+        // 生成表格内容
+        tableHtml += '<tbody>';
+        for (let i = 0; i < data.length; i++) {
+            const record = data[i];
+            tableHtml += '<tr>';
+            tableHtml += '<td>' + (i + 1) + '</td>';
+            tableHtml += '<td>' + record.Weight + '</td>';
+            tableHtml += '<td>' + record.Date + '</td>';
+            tableHtml += '</tr>';
+        }
+        tableHtml += '</tbody>';
+
+        tableHtml += '</table>';
+
+        return tableHtml;
+    }
+
+</script>

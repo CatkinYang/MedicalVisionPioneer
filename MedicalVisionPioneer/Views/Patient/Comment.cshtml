@@ -1,0 +1,103 @@
+﻿@model MedicalVisionPioneer.Models.PatientInfo
+
+@{
+    ViewBag.Title = "Comment";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+<div class="container-fluid">
+    <div class="panel panel-default">
+        <div class="panel-heading">New Comment</div>
+        <div class="panel-body">
+            <div class="form-group">
+                <label>Comment your experience</label>
+                <div class="rating">
+                    <span onclick="rate(1)" class="star">&#9733;</span>
+                    <span onclick="rate(2)" class="star">&#9733;</span>
+                    <span onclick="rate(3)" class="star">&#9733;</span>
+                    <span onclick="rate(4)" class="star">&#9733;</span>
+                    <span onclick="rate(5)" class="star">&#9733;</span>
+                </div>
+            </div>
+            <label>Your Rate</label>
+            <div class="form-group">
+                <input type="text" id="userRating" class="form-control" placeholder="Enter your rating" readonly>
+            </div>
+            <div id="averageRate">Average Rate: @ViewBag.AverageRate</div>
+            <div id="summernote"></div>
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="form-group text-left">
+                        <button type="button" class="btn btn-primary" onclick="goBack()">Back</button>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="form-group text-right">
+                        <button type="submit" class="btn btn-primary" onclick="saveChanges()">Comment</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+    let selectedRating = 0;
+    const stars = document.querySelectorAll('.star');
+
+    function rate(rating) {
+        if (rating === selectedRating) {
+            selectedRating = 0; // 若点击的是已选中的星星，则取消选择
+        } else {
+            selectedRating = rating; // 保存选定的评级
+        }
+
+        updateStars();
+        document.getElementById("userRating").value = selectedRating;
+    }
+
+    function updateStars() {
+        for (let i = 0; i < stars.length; i++) {
+            if (i < selectedRating) {
+                stars[i].style.color = '#FFD700'; // 设置黄色作为亮星的颜色
+            } else {
+                stars[i].style.color = 'gray';
+            }
+        }
+    }
+    function saveChanges() {
+        const rating = selectedRating;
+        const comment = document.getElementById('summernote').innerText;
+        const currentTime = new Date().toLocaleString(); // 获取当前时间
+        $.ajax({
+            url: '@Url.Action("Comment", "Patient")', // 根据实际情况修改对应的控制器和动作方法
+            type: 'POST',
+            data: {rate: rating, comment: comment, currentTime: currentTime }, // 添加currentTime数据
+            success: function () {
+                alert("Comment successfully");
+                location.reload(); // 刷新页面
+            },
+            error: function () {
+                // 处理保存失败或出错情况
+            }
+        });
+    }
+
+    $(document).ready(function () {
+        $.ajax({
+        url: '@Url.Action("Comment", "Patient")',
+            type: 'GET',
+            success: function (data) {
+                const averageRate = parseFloat(data).toFixed(1); // 限制小数点后的位数
+                $('#averageRateValue').text(averageRate); // 将平均评分显示在界面上
+            },
+            error: function () {
+            // 处理获取平均评分失败或出错情况
+            }
+        });
+    });
+
+    function goBack() {
+        history.back(); // 返回上一个页面
+    }
+
+</script>

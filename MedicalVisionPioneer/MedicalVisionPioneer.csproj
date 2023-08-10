@@ -144,6 +144,18 @@
     <Compile Include="Models\Account.cs">
       <DependentUpon>MedicalModel.tt</DependentUpon>
     </Compile>
+    <Compile Include="Models\Appointment.cs">
+      <DependentUpon>MedicalModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\Comment.cs">
+      <DependentUpon>MedicalModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\docAccount.cs">
+      <DependentUpon>MedicalModel.tt</DependentUpon>
+    </Compile>
+    <Compile Include="Models\docInfo.cs">
+      <DependentUpon>MedicalModel.tt</DependentUpon>
+    </Compile>
     <Compile Include="Models\HWinfo.cs">
       <DependentUpon>MedicalModel.tt</DependentUpon>
     </Compile>
@@ -161,6 +173,9 @@
       <AutoGen>True</AutoGen>
       <DesignTime>True</DesignTime>
       <DependentUpon>MedicalModel.edmx</DependentUpon>
+    </Compile>
+    <Compile Include="Models\openAppointment.cs">
+      <DependentUpon>MedicalModel.tt</DependentUpon>
     </Compile>
     <Compile Include="Models\PatientInfo.cs">
       <DependentUpon>MedicalModel.tt</DependentUpon>
@@ -1971,9 +1986,15 @@
     <Content Include="Views\Shared\_DoctorLayout.cshtml" />
     <Content Include="Views\Patient\Appointment.cshtml" />
     <Content Include="Views\Doctor\Login.cshtml" />
+    <Content Include="Views\Doctor\Register.cshtml" />
+    <Content Include="Views\Doctor\Appointment.cshtml" />
+    <Content Include="Views\Patient\Comment.cshtml" />
+    <Content Include="Views\Doctor\doc_settings.cshtml" />
+    <Content Include="Views\Doctor\doc_profile.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Uploads\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="Content\bootstrap.rtl.min.css.map" />
