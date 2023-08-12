@@ -1991,6 +1991,8 @@
     <Content Include="Views\Patient\Comment.cshtml" />
     <Content Include="Views\Doctor\doc_settings.cshtml" />
     <Content Include="Views\Doctor\doc_profile.cshtml" />
+    <Content Include="Views\Patient\Wait.cshtml" />
+    <Content Include="Views\Patient\Done.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />

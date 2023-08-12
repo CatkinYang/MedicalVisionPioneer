@@ -1,65 +1,119 @@
-﻿
-@{
-    ViewBag.Title = "Appointment";
-    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
-}
-@{
-    ViewBag.Title = "Appointment";
-    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
-}
+﻿@model PagedList.IPagedList<MedicalVisionPioneer.Models.Appointment>
+@using PagedList.Mvc
+@using Newtonsoft.Json;
 
+@{
+    ViewBag.Title = "Appointment";
+    Layout = "~/Views/Shared/_DoctorLayout.cshtml";
+}
+@{
+    int id_1 = (Model.PageNumber - 1) * Model.PageSize + 1;
+    int id_2 = (Model.PageNumber - 1) * Model.PageSize + 1;
+}
 <div class="container-fluid">
     <div class="panel panel-default">
-        <div id="calendar"></div>
-    </div>
-    <div id="confirmationDialog" style="display: none;">
-        <p>Open Appointment?</p>
-        <button id="confirmBtn">Yes</button>
-        <button id="cancelBtn">No</button>
+        <div class="row">
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Appointment wait to address</div>
+                    <div class="panel-body">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Sick-note number</th>
+                                    <th>Patient id</th>
+                                    <th>Date</th>
+                                    <th>Image</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var record in Model.Where(r => r.status == false))
+                                {
+
+                                    <tr>
+                                        <td>@id_1</td>
+                                        <td>@record.id</td>
+                                        <td>@record.patientid</td>
+                                        <td>@record.date</td>
+                                        <td>
+                                            @if (record.image != null)
+                                            {
+                                                <img src="data:image/jpeg;base64,@Convert.ToBase64String(record.image)" alt="Image" style="max-width: 100px; max-height: 100px;" />
+                                            }
+                                            else
+                                            {
+                                                <span>No image</span>
+                                            }
+                                        </td>
+                                        <td>
+                                            <button type="button" class="btn btn-success btn-xs" onclick="confirmConsult('@record.id')">√</button>
+                                        </td>
+                                    </tr>
+                                    id_1++;
+                                }
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            @Html.PagedListPager(Model, page => Url.Action("Appointment", new { page }))
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="panel panel-default">
+                    <div class="panel-heading">Appointments have been addressed</div>
+                    <div class="panel-body">
+                        <table class="table table-bordered table-hover">
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>Sick-note number</th>
+                                    <th>Patient id</th>
+                                    <th>Date</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var record in Model.Where(r => r.status == true))
+                                {
+                                    <tr>
+                                        <td>@id_2</td>
+                                        <td>@record.id</td>
+                                        <td>@record.patientid</td>
+                                        <td>@record.date</td>
+                                    </tr>
+                                    id_2++;
+                                }
+                            </tbody>
+                        </table>
+                        <div class="text-center">
+                            @Html.PagedListPager(Model, page => Url.Action("Appointment", new { page }))
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-
 <script>
+    function confirmConsult(appointmentId) {
+    if (confirm("Are you sure that you have consult this patient?")) {
+        consultPatient(appointmentId);
+    }
+}
 
-    document.addEventListener('DOMContentLoaded', function () {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            selectable: true,
-
-            dateClick: function (info) {
-                var dateObj = new Date(info.start);
-                var year = dateObj.getFullYear();
-                var month = String(dateObj.getMonth() + 1).padStart(2, '0');
-                var day = String(dateObj.getDate()).padStart(2, '0');
-                var selectedDate = `${year}-${month}-${day}`;
-                document.getElementById('confirmationDialog').style.display = 'block';
-                document.getElementById('confirmBtn').addEventListener('click', function () {
-                    openAppointment(selectedDate);
-                    document.getElementById('confirmationDialog').style.display = 'none';
-                });
-                document.getElementById('cancelBtn').addEventListener('click', function () {
-                    document.getElementById('confirmationDialog').style.display = 'none';
-                });
-            },
-        });
-        calendar.render();
-        function openAppointment(selectedDate) {
-            $.ajax({
-            url: '@Url.Action("Appointment", "Doctor")', // 根据实际情况修改对应的控制器和动作方法
-                type: 'POST',
-                data: { date: selectedDate }, // 添加currentTime数据
-                success: function () {
-                    alert("Open Appointment successfully");
-                    location.reload(); // 刷新页面
-                },
-                error: function () {
-                    alert("Open Appointment failed");
-                // 处理保存失败或出错情况
-                }
-            });
+function consultPatient(appointmentId) {
+    $.ajax({
+        url: '@Url.Action("ConsultPatient", "Doctor")',
+        type: 'POST',
+        data: { appointmentId: appointmentId },
+        success: function () {
+            alert("Consult successfully");
+            location.reload(); // 刷新页面或执行其他操作
+        },
+        error: function (xhr, status, error) {
+            console.error(error);
         }
     });
-
-
+}
 </script>

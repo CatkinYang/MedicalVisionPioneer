@@ -21,6 +21,8 @@
           <Property Name="docid" Type="int" Nullable="false" />
           <Property Name="patientid" Type="int" Nullable="false" />
           <Property Name="date" Type="nvarchar(max)" Nullable="false" />
+          <Property Name="status" Type="bit" Nullable="false" />
+          <Property Name="image" Type="image" />
         </EntityType>
         <EntityType Name="Comment">
           <Key>
@@ -47,6 +49,7 @@
           <Property Name="docId" Type="int" Nullable="false" />
           <Property Name="docName" Type="nvarchar" MaxLength="50" Nullable="false" />
           <Property Name="docMajor" Type="nvarchar" MaxLength="50" Nullable="false" />
+          <Property Name="docAppointment" Type="bit" Nullable="false" />
         </EntityType>
         <EntityType Name="HWinfo">
           <Key>
@@ -60,11 +63,11 @@
         </EntityType>
         <EntityType Name="openAppointment">
           <Key>
-            <PropertyRef Name="docId" />
+            <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="int" StoreGeneratedPattern="Identity" Nullable="false" />
           <Property Name="docId" Type="int" Nullable="false" />
-          <Property Name="date" Type="datetime" Nullable="false" />
+          <Property Name="date" Type="date" Nullable="false" />
         </EntityType>
         <EntityType Name="PatientInfo">
           <Key>
@@ -155,6 +158,7 @@
           <Property Name="docId" Type="Int32" Nullable="false" />
           <Property Name="docName" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
           <Property Name="docMajor" Type="String" Nullable="false" MaxLength="50" FixedLength="false" Unicode="true" />
+          <Property Name="docAppointment" Type="Boolean" Nullable="false" />
         </EntityType>
         <EntityType Name="Appointment">
           <Key>
@@ -164,6 +168,8 @@
           <Property Name="docid" Type="Int32" Nullable="false" />
           <Property Name="patientid" Type="Int32" Nullable="false" />
           <Property Name="date" Type="String" Nullable="false" MaxLength="Max" FixedLength="false" Unicode="true" />
+          <Property Name="status" Type="Boolean" Nullable="false" />
+          <Property Name="image" Type="Binary" MaxLength="Max" FixedLength="false" />
         </EntityType>
         <EntityType Name="Comment">
           <Key>
@@ -177,11 +183,11 @@
         </EntityType>
         <EntityType Name="openAppointment">
           <Key>
-            <PropertyRef Name="docId" />
+            <PropertyRef Name="id" />
           </Key>
           <Property Name="id" Type="Int32" Nullable="false" annotation:StoreGeneratedPattern="Identity" />
           <Property Name="docId" Type="Int32" Nullable="false" />
-          <Property Name="date" Type="DateTime" Nullable="false" />
+          <Property Name="date" Type="DateTime" Nullable="false" Precision="0" />
         </EntityType>
       </Schema>
     </edmx:ConceptualModels>
@@ -238,6 +244,7 @@
           <EntitySetMapping Name="docInfo">
             <EntityTypeMapping TypeName="MedicalVisionPioneerModel.docInfo">
               <MappingFragment StoreEntitySet="docInfo">
+                <ScalarProperty Name="docAppointment" ColumnName="docAppointment" />
                 <ScalarProperty Name="docMajor" ColumnName="docMajor" />
                 <ScalarProperty Name="docName" ColumnName="docName" />
                 <ScalarProperty Name="docId" ColumnName="docId" />
@@ -247,6 +254,8 @@
           <EntitySetMapping Name="Appointment">
             <EntityTypeMapping TypeName="MedicalVisionPioneerModel.Appointment">
               <MappingFragment StoreEntitySet="Appointment">
+                <ScalarProperty Name="image" ColumnName="image" />
+                <ScalarProperty Name="status" ColumnName="status" />
                 <ScalarProperty Name="date" ColumnName="date" />
                 <ScalarProperty Name="patientid" ColumnName="patientid" />
                 <ScalarProperty Name="docid" ColumnName="docid" />

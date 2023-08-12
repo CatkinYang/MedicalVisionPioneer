@@ -9,6 +9,7 @@ using System.Web.UI;
 using System.Web.UI.WebControls;
 using Newtonsoft.Json;
 using System.Net.Mail;
+using System.IO;
 
 namespace MedicalVisionPioneer.Controllers
 {
@@ -42,6 +43,58 @@ namespace MedicalVisionPioneer.Controllers
 
             return View(weightRecords.ToPagedList(pageNumber, pageSize));
         }
+
+        public ActionResult Wait(int? page)
+        {
+            string currentUserEmail = (string)Session["useremail"];
+            if (string.IsNullOrEmpty(currentUserEmail))
+            {
+                // 当前用户未登录，执行相应的处理逻辑（例如重定向到登录页面）
+                return RedirectToAction("Login", "Patient");
+            }
+
+            // 根据当前用户的邮箱获取对应的用户数据
+            PatientInfo currentUser = db.PatientInfo.FirstOrDefault(p => p.patientEmail == currentUserEmail);
+            if (currentUser == null)
+            {
+                // 用户数据不存在，执行适当的处理逻辑
+                // ...
+            }
+
+            // 获取当前用户的体重记录
+            List<Appointment> Appointment = db.Appointment.Where(r => (r.patientid == currentUser.AccountID && r.status == false)).ToList();
+            int pageSize = 5; // 每页显示的记录数
+            int pageNumber = (page ?? 1); // 当前页码
+
+            return View(Appointment.ToPagedList(pageNumber, pageSize));
+        }
+
+
+        public ActionResult Done(int? page)
+        {
+            string currentUserEmail = (string)Session["useremail"];
+            if (string.IsNullOrEmpty(currentUserEmail))
+            {
+                // 当前用户未登录，执行相应的处理逻辑（例如重定向到登录页面）
+                return RedirectToAction("Login", "Patient");
+            }
+
+            // 根据当前用户的邮箱获取对应的用户数据
+            PatientInfo currentUser = db.PatientInfo.FirstOrDefault(p => p.patientEmail == currentUserEmail);
+            if (currentUser == null)
+            {
+                // 用户数据不存在，执行适当的处理逻辑
+                // ...
+            }
+
+            // 获取当前用户的体重记录
+            List<Appointment> Appointment = db.Appointment.Where(r => ( r.patientid == currentUser.AccountID && r.status == true)).ToList();
+            int pageSize = 5; // 每页显示的记录数
+            int pageNumber = (page ?? 1); // 当前页码
+
+            return View(Appointment.ToPagedList(pageNumber, pageSize));
+        }
+
 
         public ActionResult Logout()
         {
@@ -271,20 +324,53 @@ namespace MedicalVisionPioneer.Controllers
         }
 
 
-      /*  public ActionResult Appointment()
+        public ActionResult Appointment()
         {
             return View();
         }
+        private byte[] ConvertImageToByteArray(HttpPostedFileBase imageFile)
+        {
+            if (imageFile == null)
+                return null;
 
+            using (var inputStream = imageFile.InputStream)
+            {
+                MemoryStream memoryStream = inputStream as MemoryStream;
+                if (memoryStream == null)
+                {
+                    memoryStream = new MemoryStream();
+                    inputStream.CopyTo(memoryStream);
+                }
+
+                return memoryStream.ToArray();
+            }
+        }
         [HttpPost]
         public String CreateAppointment()
         {
+            int doctorId = int.Parse(Request.Form["DoctorID"]);
+            
+            // Check if doctorId exists
+            bool doctorExists = db.docAccount.Any(a => a.id == doctorId);
+            docInfo docExist = db.docInfo.FirstOrDefault(d => d.docId == doctorId);
+            if (!doctorExists)
+            {
+                // Handle the case when doctorId does not exist
+                return "Doctor does not exist.";
+            }
+            else if(doctorExists && docExist.docAppointment == false)
+            {
+                return "Doctor close the Appointment.";
+            }
+
             var appointment = new Appointment
             {
-                patientid= int.Parse(Request.Form["PatientID"]),
+                patientid = int.Parse(Request.Form["PatientID"]),
                 docid = int.Parse(Request.Form["DoctorID"]),
-                date = Request.Form["AppointmentDate"]
-            };
+                date = Request.Form["AppointmentDate"],
+                status = false,
+                image = ConvertImageToByteArray(Request.Files["Image"]),
+            };          
 
             var vx = Request.Files["Attachment"].ContentLength;
 
@@ -330,9 +416,9 @@ namespace MedicalVisionPioneer.Controllers
             }
 
             return "Database Unavailable.";
-        }*/
-        
-       
+        }
+
+
         [HttpPost]
         public ActionResult Comment(int rate, string comment, string currentTime)
         {
@@ -369,6 +455,43 @@ namespace MedicalVisionPioneer.Controllers
             ViewBag.AverageRate = averageRate.ToString("0.00");  // 将平均评分传递到视图
 
             return View();
+        }
+
+
+        [HttpPost]
+        public ActionResult DeleteAppointment(int appointmentId)
+        {
+            // 根据预约记录的id获取记录对象
+            var appointment = db.Appointment.FirstOrDefault(a => a.id == appointmentId);
+            if (appointment == null)
+            {
+                // 处理预约记录不存在的情况
+                return RedirectToAction("Wait"); // 或者返回错误信息页面
+            }
+
+            // 从数据库中删除记录
+            db.Appointment.Remove(appointment);
+            db.SaveChanges();
+
+            return RedirectToAction("Wait");
+        }
+
+        [HttpPost]
+        public String UploadImage(HttpPostedFileBase imageFile)
+        {
+            if (imageFile != null && imageFile.ContentLength > 0)
+            {
+                byte[] imageData;
+
+                using (var binaryReader = new BinaryReader(imageFile.InputStream))
+                {
+                    imageData = binaryReader.ReadBytes(imageFile.ContentLength);
+                }
+                
+                
+                return "Success";
+            }
+            return "failed";
         }
     }
 }

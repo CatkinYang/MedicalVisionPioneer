@@ -1,0 +1,50 @@
+﻿@model PagedList.IPagedList<MedicalVisionPioneer.Models.Appointment>
+@using PagedList.Mvc
+@using Newtonsoft.Json;
+
+@{
+    ViewBag.Title = "Done";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+@{
+    int id = (Model.PageNumber - 1) * Model.PageSize + 1;
+}
+<div class="container-fluid">
+    <div class="panel panel-default">
+
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Appointments have been addressed</div>
+                <div class="panel-body">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Sick-note number</th>
+                                <th>Doctor id</th>
+                                <th>Date</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var record in Model)
+                            {
+                                <tr>
+                                    <td>@id</td>
+                                    <td>@record.id</td>
+                                    <td>@record.docid</td>
+                                    <td>@record.date</td>
+                                </tr>
+                                id++;
+                            }
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        @Html.PagedListPager(Model, page => Url.Action("Done", new { page }))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+

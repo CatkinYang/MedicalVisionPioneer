@@ -18,5 +18,7 @@ namespace MedicalVisionPioneer.Models
         public int docid { get; set; }
         public int patientid { get; set; }
         public string date { get; set; }
+        public bool status { get; set; }
+        public byte[] image { get; set; }
     }
 }

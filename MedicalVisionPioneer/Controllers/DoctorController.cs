@@ -1,6 +1,9 @@
 ﻿using MedicalVisionPioneer.Models;
+using PagedList;
 using System;
 using System.Collections.Generic;
+using System.Data.Entity.Migrations;
+using System.Globalization;
 using System.Linq;
 using System.Web;
 using System.Web.Mvc;
@@ -14,6 +17,11 @@ namespace MedicalVisionPioneer.Controllers
         public ActionResult Index()
         {
             return View();
+        }
+        public ActionResult Logout()
+        {
+            Session.Clear(); // 或者使用 Session.Remove("useremail") 删除指定键的会话数据
+            return new EmptyResult();
         }
 
         public ActionResult Register()
@@ -64,6 +72,7 @@ namespace MedicalVisionPioneer.Controllers
                 info.docId = doctor.id;
                 info.docMajor = major;
                 info.docName = name;
+                info.docAppointment = false;
                 db.docInfo.Add(info);
                 db.SaveChanges();
                 TempData["SuccessMessage"] = "Register successful!";
@@ -110,14 +119,7 @@ namespace MedicalVisionPioneer.Controllers
 
             return View();
         }
-        
-        public ActionResult Appointment() {
-
-            return View();
-        }
-
-        [HttpPost]
-        public ActionResult Appointment(string selectedDate)
+        public ActionResult Appointment(int? page)
         {
             string currentUserEmail = (string)Session["docemail"];
             if (string.IsNullOrEmpty(currentUserEmail))
@@ -125,31 +127,80 @@ namespace MedicalVisionPioneer.Controllers
                 // 当前用户未登录，执行相应的处理逻辑（例如重定向到登录页面）
                 return RedirectToAction("Login", "Doctor");
             }
-            docAccount existingInfo = db.docAccount.FirstOrDefault(d => d.docEmail == currentUserEmail);
-            if (existingInfo == null)
+            docAccount currentUser = db.docAccount.FirstOrDefault(p => p.docEmail == currentUserEmail);
+            docInfo currentDoc = db.docInfo.FirstOrDefault(d => d.docId == currentUser.id);
+                if (currentDoc == null)
             {
                 // 用户数据不存在，执行适当的处理逻辑
                 // ...
             }
-            openAppointment newAppointment = new openAppointment();
-            newAppointment.docId = existingInfo.id;
-            newAppointment.date = DateTime.Parse(selectedDate);
-            db.openAppointment.Add(newAppointment);
-            db.SaveChanges();
+            // 获取当前用户的体重记录
+            List<Appointment> Appointment = db.Appointment.Where(r => r.docid == currentUser.id).ToList();
+            int pageSize = 5; // 每页显示的记录数
+            int pageNumber = (page ?? 1); // 当前页码
 
-            return View();
+            return View(Appointment.ToPagedList(pageNumber, pageSize));
         }
+
 
         public ActionResult doc_profile()
         {
-            return View();
+            string currentUserEmail = (string)Session["docemail"];
+            if (string.IsNullOrEmpty(currentUserEmail))
+            {
+                return RedirectToAction("Login", "Doctor");
+            }
+            docAccount currentUser = db.docAccount.FirstOrDefault(p => p.docEmail == currentUserEmail);
+            docInfo currentDoc = db.docInfo.FirstOrDefault(d => d.docId == currentUser.id);
+            return View(currentDoc);
         }
-
+        
         public ActionResult doc_settings()
         {
-            return View();
+            string currentUserEmail = (string)Session["docemail"];
+            if (string.IsNullOrEmpty(currentUserEmail))
+            {
+                return RedirectToAction("Login", "Doctor");
+            }
+            docAccount currentUser = db.docAccount.FirstOrDefault(p => p.docEmail == currentUserEmail);
+            docInfo currentDoc = db.docInfo.FirstOrDefault(d => d.docId == currentUser.id);
+
+            return View(currentDoc);
         }
-    
-    
+
+        [HttpPost]
+        public ActionResult doc_settings(bool docStatus)
+        {
+            string currentUserEmail = (string)Session["docemail"];
+            if (string.IsNullOrEmpty(currentUserEmail))
+            {
+                return RedirectToAction("Login", "Doctor");
+            }
+            docAccount currentUser = db.docAccount.FirstOrDefault(p => p.docEmail == currentUserEmail);
+            docInfo currentDoc = db.docInfo.FirstOrDefault(d => d.docId == currentUser.id);
+            currentDoc.docAppointment = docStatus;
+            db.docInfo.AddOrUpdate(currentDoc);
+            db.SaveChanges();
+
+            return View(currentDoc);
+        }
+
+
+        [HttpPost]
+        public ActionResult ConsultPatient(int appointmentId)
+        {
+            var record = db.Appointment.FirstOrDefault(a => a.id == appointmentId);
+            if (record == null)
+            {
+                // 处理记录不存在的情况
+                return RedirectToAction("Appointment"); // 或者返回错误信息页面
+            }
+
+            record.status = true; // 更新记录的状态
+            db.SaveChanges(); // 保存更改
+
+            return RedirectToAction("Appointment");
+        }
+
     }
 }

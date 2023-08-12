@@ -17,5 +17,6 @@ namespace MedicalVisionPioneer.Models
         public int docId { get; set; }
         public string docName { get; set; }
         public string docMajor { get; set; }
+        public bool docAppointment { get; set; }
     }
 }

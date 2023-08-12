@@ -1,0 +1,88 @@
+﻿@model PagedList.IPagedList<MedicalVisionPioneer.Models.Appointment>
+@using PagedList.Mvc
+@using Newtonsoft.Json;
+
+@{
+    ViewBag.Title = "Wait";
+    Layout = "~/Views/Shared/_PatientLayout.cshtml";
+}
+@{
+    int id = (Model.PageNumber - 1) * Model.PageSize + 1;
+}
+<div class="container-fluid">
+    <div class="panel panel-default">
+
+        <div class="col-md-6">
+            <div class="panel panel-default">
+                <div class="panel-heading">Appointment wait to address</div>
+                <div class="panel-body">
+                    <table class="table table-bordered table-hover">
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>Sick-note number</th>
+                                <th>Doctor id</th>
+                                <th>Date</th>
+                                <th>Image</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach (var record in Model)
+                            {
+                                <tr>
+                                    <td>@id</td>
+                                    <td>@Html.DisplayFor(modelItem => record.id)</td>
+                                    <td>@Html.DisplayFor(modelItem => record.docid)</td>
+                                    <td>@Html.DisplayFor(modelItem => record.date)</td>
+                                    <td>
+                                        @if (record.image != null)
+                                        {
+                                           <img src="data:image/jpeg;base64,@Convert.ToBase64String(record.image)" alt="Image" style="max-width: 100px; max-height: 100px;" />
+                                        }
+                                        else
+                                        {
+                                        <span>No image</span>
+                                        }
+                                    </td>
+                        <td>
+                            <button type="button" class="btn btn-danger btn-xs" onclick="confirmDelete('@record.id')">X</button>
+                        </td>
+                        </tr>
+                        id++;
+                        }
+                        </tbody>
+                    </table>
+                    <div class="text-center">
+                        @Html.PagedListPager(Model, page => Url.Action("Wait", new { page }))
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    function confirmDelete(appointmentId) {
+        if (confirm("Cancel this appointment？")) {
+            deleteRecord(appointmentId);
+        }
+    }
+
+    function deleteRecord(appointmentId) {
+        // 发送 AJAX 请求删除记录
+        $.ajax({
+            url: '@Url.Action("DeleteAppointment", "Patient")',
+            type: 'POST',
+            data: { appointmentId: appointmentId },
+            success: function () {
+                // 删除成功后执行的操作
+                alert("Cancel this appointment successfully");
+                // 刷新页面或执行其他操作
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+                // 处理错误情况
+                console.error(error);
+            }
+        });
+    }
+</script>

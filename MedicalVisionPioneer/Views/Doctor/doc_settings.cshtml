@@ -1,8 +1,75 @@
-﻿
+﻿@model MedicalVisionPioneer.Models.docInfo
+
 @{
-    ViewBag.Title = "doc_settings";
+    ViewBag.Title = "Settings";
     Layout = "~/Views/Shared/_DoctorLayout.cshtml";
 }
 
-<h2>Settings</h2>
+<div class="container-fluid">
+    <div class="col-md-12">
+        <h1>Hello, @Model.docName</h1>
+    </div>
+    <div class="col-md-3">
+        <button type="button" class="btn btn-primary" onclick="confirmLogout()">Logout</button>
+    </div>
+    <div class="col-md-3">
+        <button type="button" class="btn btn-primary" onclick="openAppointment()">OpenAppointment</button>
+    </div>
+    <div class="col-md-3">
+        <button type="button" class="btn btn-primary" onclick="closeAppointment()">CloseAppointment</button>
+    </div>
+</div>
+
+<script>
+    function confirmLogout() {
+        if (confirm("Are you sure you want to logout?")) {
+            logout();
+        }
+    }
+    function logout() {
+        $.ajax({
+            url: '@Url.Action("Logout", "Doctor")',
+            type: 'POST',
+            success: function () {
+                window.location.href = '@Url.Action("Login", "Doctor")';
+            },
+            error: function () {
+                // 处理错误情况
+            }
+        });
+    }
+
+    function openAppointment() {
+        $.ajax({
+        url: '@Url.Action("doc_settings", "Doctor")',
+            type: 'POST',
+            data: { docStatus: true },
+            success: function () {
+                alert("Doctor open appointment successfully");
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+            // 处理错误情况
+                console.error(error);
+        }
+    });
+    }
+
+    function closeAppointment() {
+                $.ajax({
+        url: '@Url.Action("doc_settings", "Doctor")',
+            type: 'POST',
+            data: { docStatus: false },
+            success: function () {
+                alert("Doctor close appointment successfully");
+                location.reload();
+            },
+            error: function (xhr, status, error) {
+            // 处理错误情况
+                console.error(error);
+        }
+    });
+
+    }
+</script>
 

@@ -1,8 +1,41 @@
 ﻿
+@model MedicalVisionPioneer.Models.docInfo
 @{
-    ViewBag.Title = "doc_profile" ;
+    ViewBag.Title = "doc_profile";
     Layout = "~/Views/Shared/_DoctorLayout.cshtml";
 }
 
-<h2>Profile_info</h2>
+
+<div class="container-fluid">
+    <div class="row cm-fix-height">
+        <div class="col-sm-12">
+            <div class="panel panel-default">
+                <div class="panel-body">
+                    <h3>My infomation</h3>
+                    <table class="table table-bordered" style="margin-top:10px;">
+                        <tr>
+                            <th style="text-align:right;">ID: </th>
+                            <td>@Model.docId</td>
+                            <th style="text-align:right;">Name: </th>
+                            <td>@Model.docName</td>
+
+                        </tr>
+                        <tr>
+                            <th style="text-align:right;">Major: </th>
+                            <td>@Model.docMajor</td>
+                            <th style="text-align:right;">Appointment: </th>
+                            <td>@Model.docAppointment</td>
+                        </tr>
+
+                        <tr>
+                            <th colspan="12" style="text-align:center;">
+                                <input type="button" class="btn btn-default" onclick="javascript: window.history.back();" value="Back" />
+                            </th>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 
